@@ -1,0 +1,20 @@
+# This is Conda environment file
+# Usage: `conda env update -f environment.yml`
+
+name: face_sdk
+
+channels:
+  - pytorch
+
+dependencies:
+  - pip
+  - python 
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pandas
+  - opencv
+
+  - pip:
+    - pre-commit
+    - black
+    - flake8
