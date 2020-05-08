@@ -15,6 +15,7 @@ dependencies:
   - opencv
 
   - pip:
+    - pytest
     - pre-commit
     - black
     - flake8
