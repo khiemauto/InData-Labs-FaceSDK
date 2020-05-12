@@ -12,6 +12,7 @@ def test_alignment():
     path = "./test/data/test.jpg"
     assert os.path.exists(path)
     image = cv2.imread(path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     landmarks = np.array(
         [
