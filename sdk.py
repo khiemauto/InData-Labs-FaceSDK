@@ -2,10 +2,12 @@ import numpy as np
 
 from typing import List, Tuple
 
+from modules.detection.RetinaFace.model_class import RetinaFace
+
 
 class FaceRecognitionSDK:
-    def __init__(self):
-        pass
+    def __init__(self, config: dict):
+        self.detector = RetinaFace(config["detector"])
 
     def load_database(self, path: str):
         """Loads database from disk.
@@ -78,7 +80,7 @@ class FaceRecognitionSDK:
         Args:
             image: numpy image (H,W,3) in RGB format.
         """
-        pass
+        return self.detector.predict(image)
 
     def recognize_faces(self, image: np.ndarray):
         """Recognize all faces on the image.
