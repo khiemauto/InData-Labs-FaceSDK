@@ -7,15 +7,12 @@ class BaseFaceDetector(ABC):
     """
     Base class for detection model
     """
-    def __init__(self, model_path: str, model_config: dict):
+    def __init__(self, config: dict):
         """
         Args:
-            model_path: path to model
-            model_config: model config
+            config: model config from module outside. Used to redefine inside config fields.
         """
-        self.model_path = model_path
-        self.model_config = model_config
-        self.model = None
+        self.config = config
 
     @abstractmethod
     def _preprocess(self, image: np.ndarray) -> np.ndarray:
@@ -23,43 +20,48 @@ class BaseFaceDetector(ABC):
         Preprocess raw image of RGB format with shape (H, W, C) for model prediction.
 
         Args:
-            image: numpy ndarray image in RGB format. Shape: (H, W, C)
+            image: image in RGB format. Shape: (H, W, C)
 
         Returns:
             np.ndarray: preprocessed image for prediction
-
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def _predict_raw(self, image: np.ndarray) -> np.ndarray:
         """
         Make prediction on preprocessed image.
 
-        :param image: preprocessed image by _preprocess method.
-        :return: raw prediction of model
+        Args:
+            image: preprocessed image by _preprocess method.
+
+        Returns:
+            np.ndarray: raw prediction of model
         """
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def predict(self, image: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
         Method to make prediction on raw image. Return processed detections
 
-        :param image: image in RGB format. Shape: (H, W, C)
-        :return: Tuple(np.ndarray, np.ndarray)
+        Args:
+            image: image in RGB format. Shape: (H, W, C)
+
+        Returns:
             Tuple of bboxes and landmarks
         """
-        prep_image = self._preprocess(image)
-        raw_output = self.model.predict(prep_image)
-        return self._postprocess(raw_output)
+        raise NotImplementedError
 
     @abstractmethod
     def _postprocess(self, raw_prediction: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
         Method to postprocess model's raw prediction.
 
-        :param raw_prediction: model's raw prediction output
-        :return: model's postprocessed output. Tuple of bboxes and landmarks
+        Args:
+            raw_prediction: model's raw prediction output
+
+        Returns:
+            Model's postprocessed output. Tuple of bboxes and landmarks
         """
-        pass
+        raise NotImplementedError
