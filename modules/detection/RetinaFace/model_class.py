@@ -23,7 +23,7 @@ class RetinaFace(BaseFaceDetector):
         super().__init__(config)
         path_to_model_config = Path(Path(__file__).parent, "config.yaml").as_posix()
         with open(path_to_model_config, "r") as fp:
-            self.model_config = yaml.load(fp)
+            self.model_config = yaml.load(fp, Loader=yaml.FullLoader)
 
         if backbone not in self.model_config.keys():
             raise ValueError(f"Unsupported backbone: {backbone}!")

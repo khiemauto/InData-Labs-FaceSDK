@@ -3,3 +3,8 @@ detector:
   nms_threshold: 0.5
   conf_threshold: 0.5
   cpu: False
+embedder:
+  image_size: 112
+  descriptor_length: 512
+  device: cpu
+  architecture: iresnet34

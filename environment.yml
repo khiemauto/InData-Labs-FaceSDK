@@ -5,6 +5,7 @@ name: face_sdk
 
 channels:
   - pytorch
+  - conda-forge
 
 dependencies:
   - pip
@@ -13,6 +14,7 @@ dependencies:
   - pytorch::torchvision
   - pandas
   - opencv
+  - git-lfs
 
   - pip:
     - scikit-image

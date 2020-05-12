@@ -11,9 +11,10 @@ class InsightFaceEmbedder(BaseFaceEmbedder):
 
     """Implements inference of face recognition nets from InsightFace project."""
 
-    def __init__(self, device, architecture="iresnet34"):
+    def __init__(self, config: dict):
 
-        self.device = device
+        self.device = config["device"]
+        architecture = config["architecture"]
 
         if architecture == "iresnet34":
             self.embedder = nets.iresnet34(pretrained=True)
@@ -24,7 +25,7 @@ class InsightFaceEmbedder(BaseFaceEmbedder):
         else:
             raise ValueError(f"Unsupported network architecture: {architecture}")
 
-        self.embedder.to(device)
+        self.embedder.to(self.device)
         self.embedder.eval()
 
         mean = [0.5] * 3
