@@ -1,15 +1,16 @@
 import numpy as np
-
+import cv2
 from typing import List, Tuple
 
 from modules.detection.RetinaFace.model_class import RetinaFace
+from modules.alignment import align_and_crop_face
 
 
 class FaceRecognitionSDK:
     def __init__(self, config: dict):
         self.detector = RetinaFace(config["detector"])
 
-    def load_database(self, path: str):
+    def load_database(self, path: str) -> None:
         """Loads database from disk.
 
         Args:
@@ -19,7 +20,7 @@ class FaceRecognitionSDK:
 
         pass
 
-    def save_database(self, path: str):
+    def save_database(self, path: str) -> None:
         """Saves database to disk.
 
         Args:
@@ -39,7 +40,7 @@ class FaceRecognitionSDK:
 
         pass
 
-    def delete_photo_by_id(self, photo_id: int):
+    def delete_photo_by_id(self, photo_id: int) -> None:
         """Removes photo (descriptor) from the database.
 
         Args:
@@ -48,7 +49,7 @@ class FaceRecognitionSDK:
         """
         pass
 
-    def detele_user_by_id(self, user_id: int):
+    def detele_user_by_id(self, user_id: int) -> None:
         """Removes all photos of the user from the database.
 
         Args:
@@ -90,7 +91,7 @@ class FaceRecognitionSDK:
         """
         pass
 
-    def get_descriptor(self, face_image: np.ndarray):
+    def get_descriptor(self, face_image: np.ndarray) -> np.ndarray:
         """Get descriptor of the face image.
 
         Args:
@@ -98,14 +99,21 @@ class FaceRecognitionSDK:
         """
         pass
 
-    def align_face(self, image: np.ndarray, landmarks: np.ndarray):
+    def align_face(self, image: np.ndarray, landmarks: np.ndarray) -> np.ndarray:
         """Align face on the image.
 
         Args:
             image: numpy image (H,W,3) in RGB format.
             landmarks: 5 keypoints of the face to align.
+        Returns:
+            face: aligned and cropped face image of shape (112,112,3)
         """
-        pass
+
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        face = align_and_crop_face(image, landmarks)
+        face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+
+        return face
 
     def set_configuration(self, config: dict):
         """Configure face recognition sdk."""
