@@ -3,12 +3,14 @@ import cv2
 from typing import List, Tuple
 
 from modules.detection.RetinaFace.model_class import RetinaFace
+from modules.recognition.insightface import InsightFaceEmbedder
 from modules.alignment import align_and_crop_face
 
 
 class FaceRecognitionSDK:
     def __init__(self, config: dict):
         self.detector = RetinaFace(config["detector"])
+        self.embedder = InsightFaceEmbedder(config["embedder"])
 
     def load_database(self, path: str) -> None:
         """Loads database from disk.
@@ -96,8 +98,13 @@ class FaceRecognitionSDK:
 
         Args:
             face_image: numpy image (112,112,3) in RGB format.
+
+        Returns:
+            descriptor: float array of length 512.
         """
-        pass
+
+        descriptor = self.embedder(face_image)
+        return descriptor
 
     def align_face(self, image: np.ndarray, landmarks: np.ndarray) -> np.ndarray:
         """Align face on the image.
