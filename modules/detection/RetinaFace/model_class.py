@@ -21,7 +21,6 @@ class RetinaFace(BaseFaceDetector):
             backbone: backbone type. Supported: res50(Resnet50), mnet1(MobileNetV1)
         """
         super().__init__(config)
-        model_path = self.config["model_path"]
         path_to_model_config = Path(Path(__file__).parent, "config.yaml").as_posix()
         with open(path_to_model_config, "r") as fp:
             self.model_config = yaml.load(fp)
@@ -30,6 +29,7 @@ class RetinaFace(BaseFaceDetector):
             raise ValueError(f"Unsupported backbone: {backbone}!")
 
         self.model_config = self.model_config[backbone]
+        model_path = Path(Path(__file__).parent, self.model_config["weights_path"]).resolve().as_posix()
         self.model = ModelClass(self.model_config, phase="test")
         self.model = load_model(self.model, model_path, self.config["cpu"])
         self.model.eval()

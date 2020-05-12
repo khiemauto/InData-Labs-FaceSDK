@@ -1,5 +1,4 @@
 detector:
-  model_path: /home/a_alkhouski/projects/Pytorch_Retinaface/weights/Resnet50_Final.pth
   image_size: 1000
   nms_threshold: 0.5
   conf_threshold: 0.5
