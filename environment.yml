@@ -15,6 +15,7 @@ dependencies:
   - opencv
 
   - pip:
+    - scikit-image
     - pytest
     - pre-commit
     - black
