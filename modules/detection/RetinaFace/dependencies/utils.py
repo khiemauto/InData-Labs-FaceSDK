@@ -6,33 +6,35 @@ def check_keys(model, pretrained_state_dict):
     ckpt_keys = set(pretrained_state_dict.keys())
     model_keys = set(model.state_dict().keys())
     used_pretrained_keys = model_keys & ckpt_keys
-    unused_pretrained_keys = ckpt_keys - model_keys
-    missing_keys = model_keys - ckpt_keys
-    print('Missing keys:{}'.format(len(missing_keys)))
-    print('Unused checkpoint keys:{}'.format(len(unused_pretrained_keys)))
-    print('Used keys:{}'.format(len(used_pretrained_keys)))
-    assert len(used_pretrained_keys) > 0, 'load NONE from pretrained checkpoint'
+    # unused_pretrained_keys = ckpt_keys - model_keys
+    # missing_keys = model_keys - ckpt_keys
+    # print('Missing keys:{}'.format(len(missing_keys)))
+    # print('Unused checkpoint keys:{}'.format(len(unused_pretrained_keys)))
+    # print('Used keys:{}'.format(len(used_pretrained_keys)))
+    assert len(used_pretrained_keys) > 0, "load NONE from pretrained checkpoint"
     return True
 
 
 def remove_prefix(state_dict, prefix):
-    ''' Old style model is stored with all names of parameters sharing common prefix 'module.' '''
-    print('remove prefix \'{}\''.format(prefix))
-    f = lambda x: x.split(prefix, 1)[-1] if x.startswith(prefix) else x
+    """ Old style model is stored with all names of parameters sharing common prefix 'module.' """
+    # print('remove prefix \'{}\''.format(prefix))
+    def f(x):
+        return x.split(prefix, 1)[-1] if x.startswith(prefix) else x
+
     return {f(key): value for key, value in state_dict.items()}
 
 
 def load_model(model, pretrained_path, load_to_cpu):
-    print('Loading pretrained model from {}'.format(pretrained_path))
+    # print('Loading pretrained model from {}'.format(pretrained_path))
     if load_to_cpu:
         pretrained_dict = torch.load(pretrained_path, map_location=lambda storage, loc: storage)
     else:
         device = torch.cuda.current_device()
         pretrained_dict = torch.load(pretrained_path, map_location=lambda storage, loc: storage.cuda(device))
     if "state_dict" in pretrained_dict.keys():
-        pretrained_dict = remove_prefix(pretrained_dict['state_dict'], 'module.')
+        pretrained_dict = remove_prefix(pretrained_dict["state_dict"], "module.")
     else:
-        pretrained_dict = remove_prefix(pretrained_dict, 'module.')
+        pretrained_dict = remove_prefix(pretrained_dict, "module.")
     check_keys(model, pretrained_dict)
     model.load_state_dict(pretrained_dict, strict=False)
     return model
@@ -52,9 +54,13 @@ def decode(loc, priors, variances):
         decoded bounding box predictions
     """
 
-    boxes = torch.cat((
-        priors[:, :2] + loc[:, :2] * variances[0] * priors[:, 2:],
-        priors[:, 2:] * torch.exp(loc[:, 2:] * variances[1])), 1)
+    boxes = torch.cat(
+        (
+            priors[:, :2] + loc[:, :2] * variances[0] * priors[:, 2:],
+            priors[:, 2:] * torch.exp(loc[:, 2:] * variances[1]),
+        ),
+        1,
+    )
     boxes[:, :2] -= boxes[:, 2:] / 2
     boxes[:, 2:] += boxes[:, :2]
     return boxes
@@ -72,12 +78,16 @@ def decode_landm(pre, priors, variances):
     Return:
         decoded landm predictions
     """
-    landms = torch.cat((priors[:, :2] + pre[:, :2] * variances[0] * priors[:, 2:],
-                        priors[:, :2] + pre[:, 2:4] * variances[0] * priors[:, 2:],
-                        priors[:, :2] + pre[:, 4:6] * variances[0] * priors[:, 2:],
-                        priors[:, :2] + pre[:, 6:8] * variances[0] * priors[:, 2:],
-                        priors[:, :2] + pre[:, 8:10] * variances[0] * priors[:, 2:],
-                        ), dim=1)
+    landms = torch.cat(
+        (
+            priors[:, :2] + pre[:, :2] * variances[0] * priors[:, 2:],
+            priors[:, :2] + pre[:, 2:4] * variances[0] * priors[:, 2:],
+            priors[:, :2] + pre[:, 4:6] * variances[0] * priors[:, 2:],
+            priors[:, :2] + pre[:, 6:8] * variances[0] * priors[:, 2:],
+            priors[:, :2] + pre[:, 8:10] * variances[0] * priors[:, 2:],
+        ),
+        dim=1,
+    )
     return landms
 
 

@@ -1,26 +1,27 @@
 import numpy as np
 import cv2
 from typing import List, Tuple
+import faiss
 
 from modules.detection.RetinaFace.model_class import RetinaFace
 from modules.recognition.insightface import InsightFaceEmbedder
 from modules.alignment import align_and_crop_face
+from modules.database import FaissFaceStorage
 
 
 class FaceRecognitionSDK:
     def __init__(self, config: dict):
         self.detector = RetinaFace(config["detector"])
         self.embedder = InsightFaceEmbedder(config["embedder"])
+        self.database = FaissFaceStorage(config["database"])
 
     def load_database(self, path: str) -> None:
         """Loads database from disk.
 
         Args:
             path: path to database
-
         """
-
-        pass
+        self.database.load(path)
 
     def save_database(self, path: str) -> None:
         """Saves database to disk.
@@ -29,8 +30,7 @@ class FaceRecognitionSDK:
             path: path to database
 
         """
-
-        pass
+        self.database.save(path)
 
     def add_photo_by_user_id(self, image: np.ndarray, user_id: int):
         """Adds photo of the user to the database.
@@ -41,6 +41,10 @@ class FaceRecognitionSDK:
         """
 
         pass
+
+    def add_descriptor(self, descriptor: np.ndarray, user_id: int) -> Tuple[None, int]:
+
+        self.database.add_descriptor(descriptor, user_id)
 
     def delete_photo_by_id(self, photo_id: int) -> None:
         """Removes photo (descriptor) from the database.
@@ -57,7 +61,7 @@ class FaceRecognitionSDK:
         Args:
             user_id: id of the user.
         """
-        pass
+        self.database.remove_user(user_id)
 
     def find_most_similar(self, descriptor: np.ndarray, top_k: int = 1):
         """Find most similar-looking photos (and their user id's) in the database.
@@ -66,7 +70,8 @@ class FaceRecognitionSDK:
             descriptor: descriptor of the photo to use as a search query.
             top_k: number of most similar results to return.
         """
-        pass
+        indicies, distances = self.database.find(descriptor, top_k)
+        return indicies, distances
 
     def verify_faces(self, first_face: np.ndarray, second_face: np.ndarray):
         """Check if two face images are of the same person.

@@ -5,6 +5,8 @@ detector:
   cpu: False
 embedder:
   image_size: 112
-  descriptor_length: 512
+  descriptor_size: &descriptor_size 512
   device: cpu
   architecture: iresnet34
+database:
+  descriptor_size: *descriptor_size
