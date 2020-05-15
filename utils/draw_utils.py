@@ -1,34 +1,43 @@
 import cv2
+import numpy as np
 
-points_colors = [
-    (0, 0, 255),
-    (0, 255, 255),
-    (255, 0, 255),
-    (0, 255, 0),
-    (255, 0, 0)
-]
+points_colors = [(0, 0, 255), (0, 255, 255), (255, 0, 255), (0, 255, 0), (255, 0, 0)]
 
 
-def draw_boxes(img, boxes, conf_threshold=0., color=(0, 0, 255), thickness=2):
+def draw_boxes(img, boxes, name_tags=None, similarities=None, conf_threshold=0.0, color=(0, 0, 255), thickness=2):
     font_scale = float(max(img.shape) * 0.001)
-    print(f"font_scale = {font_scale}")
-    for box in boxes:
+    # print(f"font_scale = {font_scale}")
+    for i, box in enumerate(boxes):
         conf = box[4]
         if conf < conf_threshold:
             continue
-        text = f"{conf:.4f}"
+        text = f"{conf:.4f}"[:4]
         b = list(map(int, box))
         cv2.rectangle(img, (b[0], b[1]), (b[2], b[3]), color=color, thickness=thickness)
         tx = b[0]
         ty = b[1] + 12
         cv2.putText(img, text, (tx, ty), cv2.FONT_HERSHEY_DUPLEX, font_scale, (255, 255, 255))
 
+        if name_tags:
+            tag = name_tags[i]
+            cv2.putText(img, tag, (tx - 32, b[3] + 24), cv2.FONT_HERSHEY_DUPLEX, font_scale, (255, 255, 255))
+
+        if similarities:
+            similarity_score = similarities[i]
+            cv2.putText(
+                img,
+                str(similarity_score)[:4],
+                (b[2] - 12, b[3] + 24),
+                cv2.FONT_HERSHEY_DUPLEX,
+                font_scale,
+                (255, 255, 255),
+            )
+
 
 def draw_landmarks(img, landmarks):
     thickness = int(max(img.shape) * 0.01)
-    print(f"thickness = {thickness}")
+    # print(f"thickness = {thickness}")
     for landm in landmarks:
-        landm = list(map(int, landm))
-        l = iter(landm)
-        for i, p in enumerate(zip(l, l)):
-            cv2.circle(img, (p[0], p[1]), 1, points_colors[i], thickness)
+        landm = np.reshape(landm, (2, 5))
+        for i, (x, y) in enumerate(zip(landm[0], landm[1])):
+            cv2.circle(img, (x, y), 1, points_colors[i], thickness)

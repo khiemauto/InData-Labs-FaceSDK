@@ -22,7 +22,7 @@ class FaceRecognitionSystem:
     def get_user_name(self, user_id: int) -> str:
         return self.user_id_to_name[user_id]
 
-    def create_from_folders(self, root_path: str) -> None:
+    def create_database_from_folders(self, root_path: str) -> None:
         """Create face database from hierarchy of folders.
         Each folder named as an individual and contains his/her photos.
         """
@@ -30,10 +30,15 @@ class FaceRecognitionSystem:
         try:
             for user_id, username in enumerate(os.listdir(root_path)):
 
+                user_images_path = os.path.join(root_path, username)
+
+                if not os.path.isdir(user_images_path):
+                    continue
+
                 self.user_id_to_name[user_id] = username
 
                 # iterating over user photos
-                for filename in os.listdir(os.path.join(root_path, username)):
+                for filename in os.listdir(user_images_path):
                     photo_path = os.path.join(root_path, username, filename)
                     photo = read_image(photo_path)
                     self.sdk.add_photo_by_user_id(photo, user_id)

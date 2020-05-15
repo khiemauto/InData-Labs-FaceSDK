@@ -120,5 +120,20 @@ class RetinaFace(BaseFaceDetector):
         image = self._preprocess(image)
         self.model_input_shape = image.shape
         raw_pred = self._predict_raw(image)
-        boxes, landms = self._postprocess(raw_pred)
-        return boxes, landms
+        bboxes, landms = self._postprocess(raw_pred)
+
+        converted_landmarks = []
+        # convert to our landmark format (2,5)
+        for landmarks_set in landms:
+            x_landmarks = []
+            y_landmarks = []
+            for i, lm in enumerate(landmarks_set):
+                if i % 2 == 0:
+                    x_landmarks.append(lm)
+                else:
+                    y_landmarks.append(lm)
+            converted_landmarks.append(x_landmarks + y_landmarks)
+
+        landmarks = np.array(converted_landmarks)
+
+        return bboxes, landmarks

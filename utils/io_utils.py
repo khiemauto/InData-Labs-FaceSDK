@@ -17,8 +17,9 @@ def read_image(path: str):
 
     assert os.path.exists(path)
     image = cv2.imread(path)
+    assert image is not None, f"{path} returns empty image."
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    assert image is not None
+
     return image
 
 
