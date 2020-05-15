@@ -36,12 +36,3 @@ if __name__ == "__main__":
 
     path_to_save = Path(result_path, img_path.name)
     cv2.imwrite(path_to_save.as_posix(), img)
-
-    cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
-    cv2.imshow('Image', img)
-
-    # end on escape key
-    while True:
-        if cv2.waitKey(0) == 27:
-            cv2.destroyAllWindows()
-            break
