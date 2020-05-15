@@ -32,6 +32,10 @@ class FaceRecognitionSDK:
         """
         self.database.save(path)
 
+    def reset_database(self) -> None:
+
+        self.database.reset()
+
     def add_photo_by_user_id(self, image: np.ndarray, user_id: int):
         """Adds photo of the user to the database.
 
@@ -40,7 +44,16 @@ class FaceRecognitionSDK:
             user_id: id of the user.
         """
 
-        pass
+        bboxes, landmarks = self.sdk.detect_faces(image)
+
+        if len(bboxes) > 1:
+            raise ValueError("Detected more than one face on provided image.")
+        elif len(bboxes) == 0:
+            raise ValueError("Can't detect any faces on provided image.")
+
+        face = self.sdk.align_face(image, landmarks[0])
+        descriptor = self.sdk.get_descriptor(face)
+        self.sdk.add_descriptor(descriptor, user_id)
 
     def add_descriptor(self, descriptor: np.ndarray, user_id: int) -> Tuple[None, int]:
 

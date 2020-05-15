@@ -13,7 +13,7 @@ class FaissFaceStorage(BaseFaceStorage):
     def __init__(self, config: dict):
 
         self.descriptor_size = config["descriptor_size"]
-        self.index = faiss.IndexIDMap(faiss.IndexFlatIP(self.descriptor_size))
+        self.reset()
 
     def load(self, path: str) -> None:
         """Load database."""
@@ -22,6 +22,9 @@ class FaissFaceStorage(BaseFaceStorage):
     def save(self, path: str) -> None:
         """Save database."""
         faiss.write_index(self.index, path)
+
+    def reset(self) -> None:
+        self.index = faiss.IndexIDMap(faiss.IndexFlatIP(self.descriptor_size))
 
     def find(self, descriptor: np.ndarray, top_k: int) -> List[Tuple[int, int, np.ndarray]]:
         """Add descriptor with specified user_id."""

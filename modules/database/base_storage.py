@@ -19,6 +19,11 @@ class BaseFaceStorage(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def reset(self) -> None:
+        """Clears the database."""
+        raise NotImplementedError
+
+    @abstractmethod
     def find(self, descriptor: np.ndarray, top_k: int) -> List[Tuple[int, int, np.ndarray]]:
         """Add descriptor with specified user_id."""
         raise NotImplementedError
