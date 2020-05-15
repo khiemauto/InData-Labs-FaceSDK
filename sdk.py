@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 from typing import List, Tuple
-import faiss
 
 from modules.detection.RetinaFace.model_class import RetinaFace
 from modules.recognition.insightface import InsightFaceEmbedder

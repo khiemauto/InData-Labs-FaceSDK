@@ -1,8 +1,8 @@
 import os
-import yaml
 import numpy as np
-import cv2
 from sdk import FaceRecognitionSDK
+
+from utils.io_utils import read_image, save_image, read_yaml
 
 
 class TestSDK:
@@ -11,30 +11,12 @@ class TestSDK:
     @classmethod
     def setup_class(cls, config_path="config/config.yaml"):
 
-        with open(config_path, "r") as f:
-            config = yaml.load(f, Loader=yaml.FullLoader)
+        config = read_yaml(config_path)
         cls.sdk = FaceRecognitionSDK(config)
-
-    def read_image(self, path: str):
-
-        """Reads an image in RGB format."""
-
-        assert os.path.exists(path)
-        image = cv2.imread(path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        assert image is not None
-        return image
-
-    def save_image(self, image: np.ndarray, path: str):
-
-        """Saves an image in RGB format"""
-
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        cv2.imwrite(path, image)
 
     def test_detector(self):
 
-        image = self.read_image("./test/data/test.jpg")
+        image = read_image("./test/data/test.jpg")
 
         bboxes, landmarks = self.sdk.detect_faces(image)
 
@@ -43,7 +25,7 @@ class TestSDK:
 
     def test_alignment(self):
 
-        image = self.read_image("./test/data/test.jpg")
+        image = read_image("./test/data/test.jpg")
 
         landmarks = np.array(
             [
@@ -61,7 +43,7 @@ class TestSDK:
 
         assert face.shape == (112, 112, 3)
 
-        self.save_image(face, "./test/data/alignment_result.jpg")
+        save_image(face, "./test/data/alignment_result.jpg")
 
     def test_embedder(self):
 
@@ -72,7 +54,7 @@ class TestSDK:
 
     def test_database(self):
 
-        image = self.read_image("./test/data/test.jpg")
+        image = read_image("./test/data/test.jpg")
 
         bboxes, landmarks = self.sdk.detect_faces(image)
 

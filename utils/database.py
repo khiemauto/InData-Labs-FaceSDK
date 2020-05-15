@@ -3,6 +3,7 @@ import os
 
 import cv2
 
+from utils.io_utils import read_image
 from sdk import FaceRecognitionSDK
 
 
@@ -21,17 +22,6 @@ class FaceRecognitionSystem:
     def get_user_name(self, user_id: int) -> str:
         return self.user_id_to_name[user_id]
 
-    # to-do: move to utils here and from test_sdk.
-    def read_image(self, path: str):
-
-        """Reads an image in RGB format."""
-
-        assert os.path.exists(path)
-        image = cv2.imread(path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        assert image is not None
-        return image
-
     def create_from_folders(self, root_path: str) -> None:
         """Create face database from hierarchy of folders.
         Each folder named as an individual and contains his/her photos.
@@ -45,7 +35,7 @@ class FaceRecognitionSystem:
                 # iterating over user photos
                 for filename in os.listdir(os.path.join(root_path, username)):
                     photo_path = os.path.join(root_path, username, filename)
-                    photo = self.read_image(photo_path)
+                    photo = read_image(photo_path)
                     self.sdk.add_photo_by_user_id(photo, user_id)
         except Exception:
             self.id_to_user_filename = {}
