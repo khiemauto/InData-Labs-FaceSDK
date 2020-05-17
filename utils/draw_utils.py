@@ -11,7 +11,7 @@ def draw_boxes(img, boxes, name_tags=None, similarities=None, conf_threshold=0.0
         conf = box[4]
         if conf < conf_threshold:
             continue
-        text = f"{conf:.4f}"[:4]
+        text = f"{conf:.2f}"
         b = list(map(int, box))
         cv2.rectangle(img, (b[0], b[1]), (b[2], b[3]), color=color, thickness=thickness)
         tx = b[0]
