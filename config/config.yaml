@@ -7,6 +7,6 @@ embedder:
   image_size: 112
   descriptor_size: &descriptor_size 512
   device: cpu
-  architecture: iresnet34
+  architecture: iresnet100
 database:
   descriptor_size: *descriptor_size

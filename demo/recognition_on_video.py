@@ -13,16 +13,26 @@ if __name__ == "__main__":
     parser.add_argument("--path", "-p", help="path to video", type=str)
     parser.add_argument("--config", help="path to sdk config", type=str, default="config/config.yaml")
     parser.add_argument("--result_path", "-r", help="path to save processed video", default="demo/results")
+    parser.add_argument(
+        "--folders_path",
+        "-r",
+        help="path to save folders with images",
+        default="/home/d_barysevich/FaceRecognition/employees/images",
+    )
+    parser.add_argument(
+        "--db_folder_path",
+        "-r",
+        help="path to save database",
+        default="/home/d_barysevich/FaceRecognition/employees/database",
+    )
     args = parser.parse_args()
-
-    config = read_yaml(args.config)
 
     sdk_config = read_yaml(args.config)
 
     system = FaceRecognitionSystem(sdk_config)
 
-    folders_path = "/home/d_barysevich/FaceRecognition/employees/images"
-    db_folder_path = "/home/d_barysevich/FaceRecognition/employees/database"
+    folders_path = args.folders_path
+    db_folder_path = args.db_folder_path
 
     # create, save and load database initialized from folders containing user photos
     system.create_database_from_folders(folders_path)
