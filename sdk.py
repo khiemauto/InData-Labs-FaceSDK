@@ -43,16 +43,16 @@ class FaceRecognitionSDK:
             user_id: id of the user.
         """
 
-        bboxes, landmarks = self.sdk.detect_faces(image)
+        bboxes, landmarks = self.detect_faces(image)
 
         if len(bboxes) > 1:
             raise ValueError("Detected more than one face on provided image.")
         elif len(bboxes) == 0:
             raise ValueError("Can't detect any faces on provided image.")
 
-        face = self.sdk.align_face(image, landmarks[0])
-        descriptor = self.sdk.get_descriptor(face)
-        self.sdk.add_descriptor(descriptor, user_id)
+        face = self.align_face(image, landmarks[0])
+        descriptor = self.get_descriptor(face)
+        self.add_descriptor(descriptor, user_id)
 
     def add_descriptor(self, descriptor: np.ndarray, user_id: int) -> Tuple[None, int]:
 
@@ -100,7 +100,9 @@ class FaceRecognitionSDK:
         Args:
             image: numpy image (H,W,3) in RGB format.
         """
-        return self.detector.predict(image)
+
+        bboxes, landmarks = self.detector.predict(image)
+        return bboxes, landmarks
 
     def recognize_faces(self, image: np.ndarray):
         """Recognize all faces on the image.
@@ -108,7 +110,21 @@ class FaceRecognitionSDK:
         Args:
             image: numpy image (H,W,3) in RGB format.
         """
-        pass
+
+        bboxes, landmarks = self.detect_faces(image)
+
+        user_ids = []
+        similarities = []
+
+        for i, face_keypoints in enumerate(landmarks):
+
+            face = self.align_face(image, face_keypoints)
+            descriptor = self.get_descriptor(face)
+            indicies, distances = self.find_most_similar(descriptor)
+            user_ids.append(indicies[0])
+            similarities.append(distances[0])
+
+        return bboxes, landmarks, user_ids, similarities
 
     def get_descriptor(self, face_image: np.ndarray) -> np.ndarray:
         """Get descriptor of the face image.
