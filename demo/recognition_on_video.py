@@ -15,13 +15,13 @@ if __name__ == "__main__":
     parser.add_argument("--result_path", "-r", help="path to save processed video", default="demo/results")
     parser.add_argument(
         "--folders_path",
-        "-r",
+        "-fp",
         help="path to save folders with images",
         default="/home/d_barysevich/FaceRecognition/employees/images",
     )
     parser.add_argument(
         "--db_folder_path",
-        "-r",
+        "-dbp",
         help="path to save database",
         default="/home/d_barysevich/FaceRecognition/employees/database",
     )
