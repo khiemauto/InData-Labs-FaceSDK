@@ -1,8 +1,8 @@
 detector:
-  image_size: 1000
+  image_size: 224
   nms_threshold: 0.5
   conf_threshold: 0.5
-  cpu: False
+  cpu: True
 embedder:
   image_size: 112
   descriptor_size: &descriptor_size 512
