@@ -53,7 +53,7 @@ def image():
         return json.dumps(objects)
 
     except Exception as e:
-        print("POST /image error: %e" % e)
+        print(f"POST /image error: {e}")
         return e
 
 

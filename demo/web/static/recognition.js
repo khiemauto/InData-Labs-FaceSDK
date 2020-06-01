@@ -3,13 +3,13 @@ const s = document.getElementById('objDetect');
 const sourceVideo = s.getAttribute("data-source");  //the source video to use
 const uploadWidth = s.getAttribute("data-uploadWidth") || 640; //the width of the upload file
 const mirror = s.getAttribute("data-mirror") || false; //mirror the boundary boxes
-const scoreThreshold = s.getAttribute("data-scoreThreshold") || 0.5;
 const apiServer = s.getAttribute("data-apiServer") || window.location.origin + '/image';
 
 //Video element selector
 v = document.getElementById(sourceVideo);
 
-var synth = window.speechSynthesis;
+var synth = window.speechSynthesis; // speech synthesis
+let namesGreeted = [];
 
 //for starting events
 let isPlaying = false,
@@ -32,7 +32,6 @@ function drawBoxes(objects) {
     //clear the previous drawings
     drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
 
-    //filter out objects that contain a class_name and then draw boxes and labels on each
     objects.filter(object => object.name).forEach(object => {
 
         let bbox = object.bbox;
@@ -49,11 +48,14 @@ function drawBoxes(objects) {
 
         drawCtx.fillText(object.name + " - " + Math.round(object.score * 100) + "%", x + 5, y + 20);
         drawCtx.strokeRect(x, y, width, height);
-        var utterThis = new SpeechSynthesisUtterance("Hello " + object.name);
-        utterThis.lang = 'en-US';
-        utterThis.rate = 0.75;
-        synth.speak(utterThis);
 
+        if (!namesGreeted.includes(object.name)) {
+            namesGreeted.push(object.name)
+            var utterThis = new SpeechSynthesisUtterance("Hello " + object.name);
+            utterThis.lang = 'en-US';
+            utterThis.rate = 0.75;
+            synth.speak(utterThis);
+        }
     });
 
 }
@@ -64,7 +66,6 @@ function postFile(file) {
     //Set options as form data
     let formdata = new FormData();
     formdata.append("image", file);
-    formdata.append("threshold", scoreThreshold);
 
     let xhr = new XMLHttpRequest();
     xhr.open('POST', apiServer, true);
@@ -89,7 +90,7 @@ function postFile(file) {
 //Start object detection
 function startObjectDetection() {
 
-    console.log("starting object detection");
+    console.log("starting face recognition");
 
     //Set canvas sizes base don input video
     drawCanvas.width = v.videoWidth;
