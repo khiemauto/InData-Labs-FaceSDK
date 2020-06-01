@@ -1,20 +1,23 @@
 import argparse
 import cv2
+import os
 
 from tqdm.auto import tqdm
 from pathlib import Path
 
 from pygame import mixer
 
-from utils.database import FaceRecognitionSystem
-from utils.io_utils import read_yaml, read_image, save_image
-from utils.draw_utils import draw_boxes, draw_landmarks
-from utils.voice import generate_greeting
+from face_recognition_sdk.utils.database import FaceRecognitionSystem
+from face_recognition_sdk.utils.io_utils import read_yaml, read_image, save_image
+from face_recognition_sdk.utils.draw_utils import draw_boxes, draw_landmarks
+from face_recognition_sdk.utils.voice import generate_greeting
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", help="path to sdk config", type=str, default="config/config.yaml")
+    parser.add_argument(
+        "--config", help="path to sdk config", type=str, default="face_recognition_sdk/config/config.yaml"
+    )
     parser.add_argument(
         "--folders_path", "-fp", help="path to save folders with images", default=None,
     )
@@ -47,30 +50,33 @@ if __name__ == "__main__":
 
     mixer.init()
 
-    while True:
-        ret, frame = cap.read()
+    try:
+        while True:
+            ret, frame = cap.read()
 
-        img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        bboxes, landmarks, user_ids, similarities = system.sdk.recognize_faces(img)
-        names = [system.get_user_name(uid) for uid in user_ids]
+            bboxes, landmarks, user_ids, similarities = system.sdk.recognize_faces(img)
+            names = [system.get_user_name(uid) for uid in user_ids]
 
-        draw_boxes(img, bboxes, name_tags=names, similarities=similarities)
-        draw_landmarks(img, landmarks)
+            draw_boxes(img, bboxes, name_tags=names, similarities=similarities)
+            draw_landmarks(img, landmarks)
 
-        for name in names:
-            greeting = generate_greeting(name)
-            mixer.music.load(greeting)
-            mixer.music.play()
+            for name in names:
+                greeting = generate_greeting(name)
+                mixer.music.load(greeting)
+                mixer.music.play()
 
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-        cv2.imshow("Webcam", img)
+            cv2.imshow("Webcam", img)
 
-        keyPressed = cv2.waitKey(1)
+            keyPressed = cv2.waitKey(1)
 
-        if keyPressed == 27 or keyPressed == 1048603:
-            break  # esc to quit
+            if keyPressed == 27 or keyPressed == 1048603:
+                break  # esc to quit
 
-    cv2.destroyAllWindows()
-    cap.release()
+    finally:
+        cv2.destroyAllWindows()
+        cap.release()
+        os.remove("greeting.mp3")

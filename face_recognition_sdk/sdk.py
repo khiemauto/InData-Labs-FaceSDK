@@ -2,10 +2,10 @@ import numpy as np
 import cv2
 from typing import List, Tuple
 
-from modules.detection.RetinaFace.model_class import RetinaFace
-from modules.recognition.insightface import InsightFaceEmbedder
-from modules.alignment import align_and_crop_face
-from modules.database import FaissFaceStorage
+from .modules.detection.RetinaFace.model_class import RetinaFace
+from .modules.recognition.insightface import InsightFaceEmbedder
+from .modules.alignment import align_and_crop_face
+from .modules.database import FaissFaceStorage
 
 
 class FaceRecognitionSDK:

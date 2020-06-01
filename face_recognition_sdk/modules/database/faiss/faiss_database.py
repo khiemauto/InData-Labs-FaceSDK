@@ -2,7 +2,7 @@ from typing import Union, Tuple, List
 import faiss
 import numpy as np
 
-from modules.database.base_storage import BaseFaceStorage
+from ..base_storage import BaseFaceStorage
 
 
 class FaissFaceStorage(BaseFaceStorage):

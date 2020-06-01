@@ -7,22 +7,19 @@ def conv_bn(inp, oup, stride=1, leaky=0):
     return nn.Sequential(
         nn.Conv2d(inp, oup, 3, stride, 1, bias=False),
         nn.BatchNorm2d(oup),
-        nn.LeakyReLU(negative_slope=leaky, inplace=True)
+        nn.LeakyReLU(negative_slope=leaky, inplace=True),
     )
 
 
 def conv_bn_no_relu(inp, oup, stride):
-    return nn.Sequential(
-        nn.Conv2d(inp, oup, 3, stride, 1, bias=False),
-        nn.BatchNorm2d(oup),
-    )
+    return nn.Sequential(nn.Conv2d(inp, oup, 3, stride, 1, bias=False), nn.BatchNorm2d(oup),)
 
 
 def conv_bn1X1(inp, oup, stride, leaky=0):
     return nn.Sequential(
         nn.Conv2d(inp, oup, 1, stride, padding=0, bias=False),
         nn.BatchNorm2d(oup),
-        nn.LeakyReLU(negative_slope=leaky, inplace=True)
+        nn.LeakyReLU(negative_slope=leaky, inplace=True),
     )
 
 
@@ -31,7 +28,6 @@ def conv_dw(inp, oup, stride, leaky=0.1):
         nn.Conv2d(inp, inp, 3, stride, 1, groups=inp, bias=False),
         nn.BatchNorm2d(inp),
         nn.LeakyReLU(negative_slope=leaky, inplace=True),
-
         nn.Conv2d(inp, oup, 1, 1, 0, bias=False),
         nn.BatchNorm2d(oup),
         nn.LeakyReLU(negative_slope=leaky, inplace=True),
@@ -119,10 +115,7 @@ class MobileNetV1(nn.Module):
             conv_dw(128, 128, 1),  # 155 + 32 = 187
             conv_dw(128, 128, 1),  # 187 + 32 = 219
         )
-        self.stage3 = nn.Sequential(
-            conv_dw(128, 256, 2),  # 219 +3 2 = 241
-            conv_dw(256, 256, 1),  # 241 + 64 = 301
-        )
+        self.stage3 = nn.Sequential(conv_dw(128, 256, 2), conv_dw(256, 256, 1),)  # 219 +3 2 = 241  # 241 + 64 = 301
         self.avg = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(256, 1000)
 

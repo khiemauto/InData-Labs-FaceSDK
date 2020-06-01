@@ -5,19 +5,19 @@ import json
 import numpy as np
 from PIL import Image
 
-from utils.database import FaceRecognitionSystem
-from utils.io_utils import read_yaml, read_image, save_image
+from face_recognition_sdk.utils.database import FaceRecognitionSystem
+from face_recognition_sdk.utils.io_utils import read_yaml, read_image, save_image
 
 import argparse
 
 app = Flask(__name__)
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
-sdk_config = read_yaml("config/config.yaml")
+sdk_config = read_yaml("../../face_recognition_sdk/config/config.yaml")
 
 system = FaceRecognitionSystem(sdk_config)
 
-db_folder_path = "../employees/database"
+db_folder_path = "../../../employees/database"
 
 # create, save and load database initialized from folders containing user photos
 system.load_database(db_folder_path)

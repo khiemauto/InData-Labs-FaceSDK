@@ -3,8 +3,8 @@ import os
 
 import cv2
 
-from utils.io_utils import read_image
-from sdk import FaceRecognitionSDK
+from .io_utils import read_image
+from ..sdk import FaceRecognitionSDK
 
 
 class FaceRecognitionSystem:
