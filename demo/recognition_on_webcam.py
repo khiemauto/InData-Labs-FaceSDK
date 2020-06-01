@@ -8,16 +8,27 @@ from pathlib import Path
 from pygame import mixer
 
 from face_recognition_sdk.utils.database import FaceRecognitionSystem
-from face_recognition_sdk.utils.io_utils import read_yaml, read_image, save_image
+from face_recognition_sdk.utils.io_utils import read_image, save_image
 from face_recognition_sdk.utils.draw_utils import draw_boxes, draw_landmarks
-from face_recognition_sdk.utils.voice import generate_greeting
+
+from gtts import gTTS
+
+
+def generate_greeting(username):
+
+    mp3_fp = "greeting.mp3"
+    text = f"Hello, {username}!"
+    tts = gTTS(text, lang="en")
+    # tts.write_to_fp(mp3_fp)
+    tts.save(mp3_fp)
+
+    return mp3_fp
+
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--config", help="path to sdk config", type=str, default="face_recognition_sdk/config/config.yaml"
-    )
+
     parser.add_argument(
         "--folders_path", "-fp", help="path to save folders with images", default=None,
     )
@@ -27,9 +38,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    sdk_config = read_yaml(args.config)
-
-    system = FaceRecognitionSystem(sdk_config)
+    system = FaceRecognitionSystem()
 
     folders_path = args.folders_path
     db_folder_path = args.db_folder_path

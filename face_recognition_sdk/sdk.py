@@ -1,15 +1,22 @@
 import numpy as np
 import cv2
 from typing import List, Tuple
+from pathlib import Path
 
 from .modules.detection.RetinaFace.model_class import RetinaFace
 from .modules.recognition.insightface import InsightFaceEmbedder
 from .modules.alignment import align_and_crop_face
 from .modules.database import FaissFaceStorage
+from .utils.io_utils import read_yaml
 
 
 class FaceRecognitionSDK:
-    def __init__(self, config: dict):
+    def __init__(self, config: dict = None):
+
+        if config is None:
+            path_to_default_config = Path(Path(__file__).parent, "config/config.yaml").as_posix()
+            config = read_yaml(path_to_default_config)
+
         self.detector = RetinaFace(config["detector"])
         self.embedder = InsightFaceEmbedder(config["embedder"])
         self.database = FaissFaceStorage(config["database"])

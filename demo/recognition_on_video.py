@@ -37,8 +37,10 @@ if __name__ == "__main__":
     db_folder_path = args.db_folder_path
 
     # create, save and load database initialized from folders containing user photos
-    system.create_database_from_folders(folders_path)
-    system.save_database(db_folder_path)
+    if folders_path is not None:
+        system.create_database_from_folders(folders_path)
+        system.save_database(db_folder_path)
+
     system.load_database(db_folder_path)
 
     video_path = Path(args.path).expanduser().resolve()
