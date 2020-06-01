@@ -7,6 +7,7 @@ class BaseFaceDetector(ABC):
     """
     Base class for detection model
     """
+
     def __init__(self, config: dict):
         """
         Args:

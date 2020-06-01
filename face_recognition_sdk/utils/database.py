@@ -3,15 +3,15 @@ import os
 
 import cv2
 
-from utils.io_utils import read_image
-from sdk import FaceRecognitionSDK
+from .io_utils import read_image
+from ..sdk import FaceRecognitionSDK
 
 
 class FaceRecognitionSystem:
 
     """A simple class that demonstrates how Face SDK can be integrated into other systems."""
 
-    def __init__(self, sdk_config: dict):
+    def __init__(self, sdk_config: dict = None):
 
         self.user_id_to_name = {}
         self.sdk = FaceRecognitionSDK(sdk_config)

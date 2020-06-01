@@ -4,7 +4,7 @@ from torchvision import transforms
 
 from . import nets
 
-from modules.recognition.base_embedder import BaseFaceEmbedder
+from ..base_embedder import BaseFaceEmbedder
 
 
 class InsightFaceEmbedder(BaseFaceEmbedder):

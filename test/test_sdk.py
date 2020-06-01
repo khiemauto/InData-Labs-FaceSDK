@@ -1,15 +1,15 @@
 import os
 import numpy as np
-from sdk import FaceRecognitionSDK
+from face_recognition_sdk import FaceRecognitionSDK
 
-from utils.io_utils import read_image, save_image, read_yaml
+from face_recognition_sdk.utils.io_utils import read_image, save_image, read_yaml
 
 
 class TestSDK:
     """Test functionality of face recognition SDK."""
 
     @classmethod
-    def setup_class(cls, config_path="config/config.yaml"):
+    def setup_class(cls, config_path="face_recognition_sdk/config/config.yaml"):
 
         config = read_yaml(config_path)
         cls.sdk = FaceRecognitionSDK(config)
@@ -21,7 +21,6 @@ class TestSDK:
         bboxes, landmarks = self.sdk.detect_faces(image)
 
         assert len(bboxes) == len(landmarks) == 5
-        # visualize boxes and save image
 
     def test_alignment(self):
 

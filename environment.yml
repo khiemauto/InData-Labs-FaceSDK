@@ -9,12 +9,12 @@ channels:
 
 dependencies:
   - pip
-  - python 
+  - python=3.7 
   - pytorch::pytorch
   - pytorch::torchvision
-  - pandas
   - opencv
   - git-lfs
+  - faiss-cpu
 
   - pip:
     - scikit-image
