@@ -39,6 +39,7 @@ class FaceRecognitionSystem:
 
                 # iterating over user photos
                 for filename in os.listdir(user_images_path):
+                    print(f"Adding {filename} from {user_images_path}")
                     photo_path = os.path.join(root_path, username, filename)
                     photo = read_image(photo_path)
                     self.sdk.add_photo_by_user_id(photo, user_id)

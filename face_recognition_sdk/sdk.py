@@ -42,12 +42,10 @@ class FaceRecognitionSDK:
 
         self.database.reset()
 
-    def add_photo_by_user_id(self, image: np.ndarray, user_id: int):
-        """Adds photo of the user to the database.
-
+    def extract_face_decriptor(self, image: np.ndarray):
+        """Extracts descriptor from image with single face.
         Args:
             image: numpy image (H,W,3) in RGB format.
-            user_id: id of the user.
         """
 
         bboxes, landmarks = self.detect_faces(image)
@@ -59,6 +57,18 @@ class FaceRecognitionSDK:
 
         face = self.align_face(image, landmarks[0])
         descriptor = self.get_descriptor(face)
+
+        return descriptor
+
+    def add_photo_by_user_id(self, image: np.ndarray, user_id: int):
+        """Adds photo of the user to the database.
+
+        Args:
+            image: numpy image (H,W,3) in RGB format.
+            user_id: id of the user.
+        """
+
+        descriptor = self.extract_face_decriptor(image)
         self.add_descriptor(descriptor, user_id)
 
     def add_descriptor(self, descriptor: np.ndarray, user_id: int) -> Tuple[None, int]:
@@ -99,7 +109,12 @@ class FaceRecognitionSDK:
             first_face: image of the first face.
             second_face: image of the second face.
         """
-        pass
+
+        first_descriptor = self.extract_face_decriptor(first_face)
+        second_descriptor = self.extract_face_decriptor(second_face)
+        similarity = self.get_similarity(first_descriptor, second_descriptor)
+
+        return similarity
 
     def detect_faces(self, image: np.ndarray):
         """Detect all faces on the image.
@@ -145,6 +160,11 @@ class FaceRecognitionSDK:
 
         descriptor = self.embedder(face_image)
         return descriptor
+
+    def get_similarity(self, first_descriptor: np.ndarray, second_descriptor: np.ndarray):
+
+        similarity = np.dot(first_descriptor, second_descriptor)
+        return similarity
 
     def align_face(self, image: np.ndarray, landmarks: np.ndarray) -> np.ndarray:
         """Align face on the image.

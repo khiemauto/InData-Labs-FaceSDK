@@ -51,6 +51,12 @@ class TestSDK:
         assert len(descriptor) == 512
         assert np.allclose(np.power(descriptor, 2).sum(), 1.0)
 
+    def test_similarity(self):
+
+        face = read_image("./test/data/alignment_result.jpg")
+        similarity = self.sdk.verify_faces(face, face)
+        assert similarity == 1.0
+
     def test_database(self):
 
         image = read_image("./test/data/test.jpg")
