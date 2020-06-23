@@ -58,7 +58,9 @@ class FaceRecognitionSDK:
         face = self.align_face(image, landmarks[0])
         descriptor = self.get_descriptor(face)
 
-        return descriptor
+        face_coordinates = (bboxes[0], landmarks[0])
+
+        return descriptor, face_coordinates
 
     def add_photo_by_user_id(self, image: np.ndarray, user_id: int):
         """Adds photo of the user to the database.
@@ -68,7 +70,7 @@ class FaceRecognitionSDK:
             user_id: id of the user.
         """
 
-        descriptor = self.extract_face_decriptor(image)
+        descriptor, _ = self.extract_face_decriptor(image)
         self.add_descriptor(descriptor, user_id)
 
     def add_descriptor(self, descriptor: np.ndarray, user_id: int) -> Tuple[None, int]:
@@ -110,11 +112,11 @@ class FaceRecognitionSDK:
             second_face: image of the second face.
         """
 
-        first_descriptor = self.extract_face_decriptor(first_face)
-        second_descriptor = self.extract_face_decriptor(second_face)
+        first_descriptor, first_face_coordinates = self.extract_face_decriptor(first_face)
+        second_descriptor, second_face_coordinates = self.extract_face_decriptor(second_face)
         similarity = self.get_similarity(first_descriptor, second_descriptor)
 
-        return similarity
+        return similarity, first_face_coordinates, second_face_coordinates
 
     def detect_faces(self, image: np.ndarray):
         """Detect all faces on the image.

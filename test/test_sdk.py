@@ -54,7 +54,7 @@ class TestSDK:
     def test_similarity(self):
 
         face = read_image("./test/data/alignment_result.jpg")
-        similarity = self.sdk.verify_faces(face, face)
+        similarity, _, _ = self.sdk.verify_faces(face, face)
         assert similarity == 1.0
 
     def test_database(self):
