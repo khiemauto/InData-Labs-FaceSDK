@@ -32,6 +32,6 @@ setup(
     zip_safe=False,
     url="https://gitlab.indatalabs.com/cv_rg/face-recognition-sdk",
     packages=find_packages(exclude=["demo", "test/*", "docs"]),
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     install_requires=load_requirements(PATH_ROOT),
 )
