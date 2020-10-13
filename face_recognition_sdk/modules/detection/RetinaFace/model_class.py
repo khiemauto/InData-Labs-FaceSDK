@@ -12,15 +12,20 @@ from .dependencies.retinaface import RetinaFace as ModelClass
 from .dependencies.utils import load_model, decode, decode_landm, py_cpu_nms
 from .dependencies.prior_box import PriorBox
 
+model_urls = {
+    "res50": "https://face-demo.indatalabs.com/weights/Resnet50_Final.pth",
+    "mnet1": "https://face-demo.indatalabs.com/weights/mobilenet0.25_Final.pth"
+}
+
 
 class RetinaFace(BaseFaceDetector):
-    def __init__(self, config: dict, backbone="res50"):
+    def __init__(self, config: dict):
         """
         Args:
             config: detector config for configuration of model from outside
-            backbone: backbone type. Supported: res50(Resnet50), mnet1(MobileNetV1)
         """
         super().__init__(config)
+        backbone = config["architecture"]
         path_to_model_config = Path(Path(__file__).parent, "config.yaml").as_posix()
         with open(path_to_model_config, "r") as fp:
             self.model_config = yaml.load(fp, Loader=yaml.FullLoader)
@@ -29,11 +34,10 @@ class RetinaFace(BaseFaceDetector):
             raise ValueError(f"Unsupported backbone: {backbone}!")
 
         self.model_config = self.model_config[backbone]
-        model_path = Path(Path(__file__).parent, self.model_config["weights_path"]).resolve().as_posix()
         self.model = ModelClass(self.model_config, phase="test")
-        self.model = load_model(self.model, model_path, self.config["cpu"])
+        self.device = torch.device(self.config["device"])
+        self.model = load_model(self.model, model_urls[backbone], True if self.config["device"] == "cpu" else False)
         self.model.eval()
-        self.device = torch.device("cpu" if self.config["cpu"] else "cuda")
         self.model = self.model.to(self.device)
         self.model_input_shape = None
         self.resize_scale = None
@@ -137,3 +141,6 @@ class RetinaFace(BaseFaceDetector):
         landmarks = np.array(converted_landmarks)
 
         return bboxes, landmarks
+
+    def _get_raw_model(self):
+        return self.model

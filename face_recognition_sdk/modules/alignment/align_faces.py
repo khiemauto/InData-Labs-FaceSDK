@@ -20,19 +20,6 @@ class FaceWarpException(Exception):
         return "In File {}:{}".format(__file__, super.__str__(self))
 
 
-def align_and_crop_face(image: np.ndarray, facial5points: np.ndarray, size: Tuple = (112, 112)) -> np.ndarray:
-    """Crop and align face on the image given keypoints.
-    Args:
-        image: numpy image in BGR format.
-        facial5points: array of image keypoints.
-        size: crop size (width, height). Either (96, 112) or (112, 112)
-    """
-
-    facial5points = np.reshape(facial5points, (2, 5))
-    dst_img = warp_and_crop_face(image, facial5points, crop_size=size)
-    return dst_img
-
-
 def get_reference_facial_points(
     output_size=None, inner_padding_factor=0.0, outer_padding=(0, 0), default_square=False,
 ):

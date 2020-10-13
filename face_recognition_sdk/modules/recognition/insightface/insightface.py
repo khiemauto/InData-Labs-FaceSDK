@@ -46,3 +46,6 @@ class InsightFaceEmbedder(BaseFaceEmbedder):
         descriptor = raw_prediction[0].cpu().numpy()
         descriptor = descriptor / np.linalg.norm(descriptor)
         return descriptor
+
+    def _get_raw_model(self):
+        return self.embedder

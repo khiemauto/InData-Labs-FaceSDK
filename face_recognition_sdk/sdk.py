@@ -22,7 +22,8 @@ class FaceRecognitionSDK:
         self.database = FaissFaceStorage(config["database"])
 
     def load_database(self, path: str) -> None:
-        """Loads database from disk.
+        """
+        Loads database from disk.
 
         Args:
             path: path to database
@@ -30,7 +31,8 @@ class FaceRecognitionSDK:
         self.database.load(path)
 
     def save_database(self, path: str) -> None:
-        """Saves database to disk.
+        """
+        Saves database to disk.
 
         Args:
             path: path to database
@@ -39,11 +41,13 @@ class FaceRecognitionSDK:
         self.database.save(path)
 
     def reset_database(self) -> None:
-
+        """Reset/clear database."""
         self.database.reset()
 
-    def extract_face_decriptor(self, image: np.ndarray):
-        """Extracts descriptor from image with single face.
+    def extract_face_descriptor(self, image: np.ndarray):
+        """
+        Extracts descriptor from image with single face.
+
         Args:
             image: numpy image (H,W,3) in RGB format.
         """
@@ -63,14 +67,15 @@ class FaceRecognitionSDK:
         return descriptor, face_coordinates
 
     def add_photo_by_user_id(self, image: np.ndarray, user_id: int):
-        """Adds photo of the user to the database.
+        """
+        Adds photo of the user to the database.
 
         Args:
             image: numpy image (H,W,3) in RGB format.
             user_id: id of the user.
         """
 
-        descriptor, _ = self.extract_face_decriptor(image)
+        descriptor, _ = self.extract_face_descriptor(image)
         self.add_descriptor(descriptor, user_id)
 
     def add_descriptor(self, descriptor: np.ndarray, user_id: int) -> Tuple[None, int]:
@@ -78,16 +83,18 @@ class FaceRecognitionSDK:
         self.database.add_descriptor(descriptor, user_id)
 
     def delete_photo_by_id(self, photo_id: int) -> None:
-        """Removes photo (descriptor) from the database.
+        """
+        Removes photo (descriptor) from the database.
 
         Args:
             photo_id: id of the photo in the database.
 
         """
-        pass
+        raise NotImplemented()
 
-    def detele_user_by_id(self, user_id: int) -> None:
-        """Removes all photos of the user from the database.
+    def delete_user_by_id(self, user_id: int) -> None:
+        """
+        Removes all photos of the user from the database.
 
         Args:
             user_id: id of the user.
@@ -95,7 +102,8 @@ class FaceRecognitionSDK:
         self.database.remove_user(user_id)
 
     def find_most_similar(self, descriptor: np.ndarray, top_k: int = 1):
-        """Find most similar-looking photos (and their user id's) in the database.
+        """
+        Find most similar-looking photos (and their user id's) in the database.
 
         Args:
             descriptor: descriptor of the photo to use as a search query.
@@ -105,21 +113,23 @@ class FaceRecognitionSDK:
         return indicies, distances
 
     def verify_faces(self, first_face: np.ndarray, second_face: np.ndarray):
-        """Check if two face images are of the same person.
+        """
+        Check if two face images are of the same person.
 
         Args:
             first_face: image of the first face.
             second_face: image of the second face.
         """
 
-        first_descriptor, first_face_coordinates = self.extract_face_decriptor(first_face)
-        second_descriptor, second_face_coordinates = self.extract_face_decriptor(second_face)
+        first_descriptor, first_face_coordinates = self.extract_face_descriptor(first_face)
+        second_descriptor, second_face_coordinates = self.extract_face_descriptor(second_face)
         similarity = self.get_similarity(first_descriptor, second_descriptor)
 
         return similarity, first_face_coordinates, second_face_coordinates
 
     def detect_faces(self, image: np.ndarray):
-        """Detect all faces on the image.
+        """
+        Detect all faces on the image.
 
         Args:
             image: numpy image (H,W,3) in RGB format.
@@ -129,7 +139,8 @@ class FaceRecognitionSDK:
         return bboxes, landmarks
 
     def recognize_faces(self, image: np.ndarray):
-        """Recognize all faces on the image.
+        """
+        Recognize all faces on the image.
 
         Args:
             image: numpy image (H,W,3) in RGB format.
@@ -151,25 +162,36 @@ class FaceRecognitionSDK:
         return bboxes, landmarks, user_ids, similarities
 
     def get_descriptor(self, face_image: np.ndarray) -> np.ndarray:
-        """Get descriptor of the face image.
+        """
+        Get descriptor of the face image.
 
         Args:
             face_image: numpy image (112,112,3) in RGB format.
 
         Returns:
-            descriptor: float array of length 512.
+            descriptor: float array of length 'descriptor_size' (default: 512).
         """
 
         descriptor = self.embedder(face_image)
         return descriptor
 
     def get_similarity(self, first_descriptor: np.ndarray, second_descriptor: np.ndarray):
+        """
+        Calculate dot similarity of 2 descriptors
+
+        Args:
+            first_descriptor: float array of length 'descriptor_size' (default: 512).
+            second_descriptor: float array of length 'descriptor_size' (default: 512.
+        Returns:
+            similarity: similarity score. Value - from 0 to 1.
+        """
 
         similarity = np.dot(first_descriptor, second_descriptor)
         return similarity
 
     def align_face(self, image: np.ndarray, landmarks: np.ndarray) -> np.ndarray:
-        """Align face on the image.
+        """
+        Align face on the image.
 
         Args:
             image: numpy image (H,W,3) in RGB format.
@@ -179,7 +201,7 @@ class FaceRecognitionSDK:
         """
 
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        face = align_and_crop_face(image, landmarks)
+        face = align_and_crop_face(image, landmarks, size=(112, 112))
         face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
 
         return face
