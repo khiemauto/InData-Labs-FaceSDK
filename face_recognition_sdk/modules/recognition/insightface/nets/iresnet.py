@@ -34,7 +34,14 @@ class IBasicBlock(nn.Module):
     expansion = 1
 
     def __init__(
-        self, inplanes, planes, stride=1, downsample=None, groups=1, base_width=64, dilation=1,
+        self,
+        inplanes,
+        planes,
+        stride=1,
+        downsample=None,
+        groups=1,
+        base_width=64,
+        dilation=1,
     ):
         super(IBasicBlock, self).__init__()
         if groups != 1 or base_width != 64:
@@ -137,12 +144,26 @@ class IResNet(nn.Module):
 
         layers = []
         layers.append(
-            block(self.inplanes, planes, stride, downsample, self.groups, self.base_width, previous_dilation,)
+            block(
+                self.inplanes,
+                planes,
+                stride,
+                downsample,
+                self.groups,
+                self.base_width,
+                previous_dilation,
+            )
         )
         self.inplanes = planes * block.expansion
         for _ in range(1, blocks):
             layers.append(
-                block(self.inplanes, planes, groups=self.groups, base_width=self.base_width, dilation=self.dilation,)
+                block(
+                    self.inplanes,
+                    planes,
+                    groups=self.groups,
+                    base_width=self.base_width,
+                    dilation=self.dilation,
+                )
             )
 
         return nn.Sequential(*layers)

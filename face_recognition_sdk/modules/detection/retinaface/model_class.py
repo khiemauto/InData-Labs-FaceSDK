@@ -9,12 +9,13 @@ from typing import Tuple
 
 from ..base_detector import BaseFaceDetector
 from .dependencies.retinaface import RetinaFace as ModelClass
-from .dependencies.utils import load_model, decode, decode_landm, py_cpu_nms
+from face_recognition_sdk.utils.load_utils import load_model
+from .dependencies.utils import decode, decode_landm, py_cpu_nms
 from .dependencies.prior_box import PriorBox
 
 model_urls = {
     "res50": "https://face-demo.indatalabs.com/weights/Resnet50_Final.pth",
-    "mnet1": "https://face-demo.indatalabs.com/weights/mobilenet0.25_Final.pth"
+    "mnet1": "https://face-demo.indatalabs.com/weights/mobilenet0.25_Final.pth",
 }
 
 
