@@ -12,9 +12,7 @@ from face_recognition_sdk.utils.io_utils import read_yaml, read_image
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", "-p", help="path to image", type=str)
-    parser.add_argument(
-        "--config", help="path to sdk config", type=str
-    )
+    parser.add_argument("--config", help="path to sdk config", type=str)
     args = parser.parse_args()
 
     config = read_yaml(args.config) if args.config else None

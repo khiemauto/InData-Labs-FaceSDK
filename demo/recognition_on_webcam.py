@@ -30,10 +30,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--folders_path", "-fp", help="path to save folders with images", default=None,
+        "--folders_path",
+        "-fp",
+        help="path to save folders with images",
+        default=None,
     )
     parser.add_argument(
-        "--db_folder_path", "-dbp", help="path to save database", default="../employees/database",
+        "--db_folder_path",
+        "-dbp",
+        help="path to save database",
+        default="../employees/database",
     )
 
     args = parser.parse_args()

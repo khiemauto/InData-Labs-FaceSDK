@@ -21,7 +21,10 @@ class FaceWarpException(Exception):
 
 
 def get_reference_facial_points(
-    output_size=None, inner_padding_factor=0.0, outer_padding=(0, 0), default_square=False,
+    output_size=None,
+    inner_padding_factor=0.0,
+    outer_padding=(0, 0),
+    default_square=False,
 ):
     tmp_5pts = np.array(REFERENCE_FACIAL_POINTS)
     tmp_crop_size = np.array(DEFAULT_CROP_SIZE)
@@ -119,7 +122,11 @@ def get_affine_transform_matrix(src_pts, dst_pts):
 
 
 def warp_and_crop_face(
-    src_img, facial_pts, reference_pts=None, crop_size=(96, 112), align_type="smilarity",  # BGR
+    src_img,
+    facial_pts,
+    reference_pts=None,
+    crop_size=(96, 112),
+    align_type="smilarity",  # BGR
 ):
     if reference_pts is None:
         if crop_size[0] == 96 and crop_size[1] == 112:
