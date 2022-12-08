@@ -44,6 +44,7 @@ class FaceRecognitionSystem:
                     photo = read_image(photo_path)
                     self.sdk.add_photo_by_user_id(photo, user_id)
         except Exception:
+            print(photo_path)
             self.id_to_user_filename = {}
             self.sdk.reset_database()
             raise

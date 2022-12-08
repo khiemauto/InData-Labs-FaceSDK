@@ -9,7 +9,7 @@ channels:
 
 dependencies:
   - pip
-  - python=3.7 
+  - python=3.8
   - pytorch::pytorch
   - pytorch::torchvision
   - opencv
@@ -22,3 +22,4 @@ dependencies:
     - pre-commit
     - black
     - flake8
+    - albumentations

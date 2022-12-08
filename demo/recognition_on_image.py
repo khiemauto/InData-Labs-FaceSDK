@@ -1,3 +1,6 @@
+import sys
+sys.path.append("../")
+
 import argparse
 import cv2
 
@@ -10,22 +13,22 @@ from face_recognition_sdk.utils.draw_utils import draw_boxes, draw_landmarks
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--path", "-p", help="path to image", type=str)
+    parser.add_argument("--path", "-p", help="path to image", type=str, default="./Elena_Bovina_0003.jpg")
     parser.add_argument(
-        "--config", help="path to sdk config", type=str, default="face_recognition_sdk/config/config.yaml"
+        "--config", help="path to sdk config", type=str, default="../face_recognition_sdk/config/config.yaml"
     )
-    parser.add_argument("--result_path", "-r", help="path to save processed image", default="demo/results/")
+    parser.add_argument("--result_path", "-r", help="path to save processed image", default="./result")
     parser.add_argument(
         "--folders_path",
         "-fp",
         help="path to save folders with images",
-        default="/home/d_barysevich/FaceRecognition/employees/images",
+        default="./employees/images",
     )
     parser.add_argument(
         "--db_folder_path",
         "-dbp",
         help="path to save database",
-        default="/home/d_barysevich/FaceRecognition/employees/database",
+        default="./employees/database",
     )
     args = parser.parse_args()
 

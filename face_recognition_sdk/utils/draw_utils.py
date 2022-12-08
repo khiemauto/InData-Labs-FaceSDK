@@ -47,4 +47,4 @@ def draw_landmarks(img, landmarks):
         landm = np.reshape(landm, (2, 5))
         thickness = int(np.min(landm.max(axis=1) - landm.min(axis=1)) * 0.1)
         for i, (x, y) in enumerate(zip(landm[0], landm[1])):
-            cv2.circle(img, (x, y), 1, points_colors[i], thickness)
+            cv2.circle(img, (int(x), int(y)), 1, points_colors[i], thickness)
