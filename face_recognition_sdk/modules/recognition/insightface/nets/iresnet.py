@@ -6,9 +6,9 @@ from torch.hub import load_state_dict_from_url
 __all__ = ["iresnet34", "iresnet50", "iresnet100"]
 
 model_urls = {
-    "iresnet34": "https://sota.nizhib.ai/insightface/iresnet34-5b0d0e90.pth",
-    "iresnet50": "https://sota.nizhib.ai/insightface/iresnet50-7f187506.pth",
-    "iresnet100": "https://sota.nizhib.ai/insightface/iresnet100-73e07ba7.pth",
+    "iresnet34": "https://bitbucket.org/khiembka1992/data/raw/abe66827e127477581587e7e90cdefaab459c426/InsightFace/iresnet34-5b0d0e90.pth",
+    "iresnet50": "https://bitbucket.org/khiembka1992/data/raw/abe66827e127477581587e7e90cdefaab459c426/InsightFace/iresnet50-7f187506.pth",
+    "iresnet100": "https://bitbucket.org/khiembka1992/data/raw/abe66827e127477581587e7e90cdefaab459c426/InsightFace/iresnet100-73e07ba7.pth",
 }
 
 

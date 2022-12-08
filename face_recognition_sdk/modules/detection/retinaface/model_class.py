@@ -14,8 +14,8 @@ from .dependencies.utils import decode, decode_landm, py_cpu_nms
 from .dependencies.prior_box import PriorBox
 
 model_urls = {
-    "res50": "https://face-demo.indatalabs.com/weights/Resnet50_Final.pth",
-    "mnet1": "https://face-demo.indatalabs.com/weights/mobilenet0.25_Final.pth",
+    "res50": "https://bitbucket.org/khiembka1992/data/raw/abe66827e127477581587e7e90cdefaab459c426/InsightFace/Resnet50_Final.pth",
+    "mnet1": "https://bitbucket.org/khiembka1992/data/raw/abe66827e127477581587e7e90cdefaab459c426/InsightFace/mobilenet0.25_Final.pth",
 }
 
 
